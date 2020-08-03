@@ -1,29 +1,27 @@
 class Author
-    attr_accessor :name, :posts
-    @@all = []
-    def initialize(name)
-        @name = name
-        @posts = []
-        @@all << self
-    end
 
-    def add_post_by_title(title)
-        post = Post.new(title)
-        @posts << post
-        post.author = self
-    end
+  attr_reader :name
 
-    def add_post(post)
-        @posts << post
-        post.author = self
-    end
+  def initialize(name)
+    @name = name
+  end
 
-    def self.post_count
-        total = 0
-        @@all.each do |author|
-            total += author.posts.size
-        end
-        total
+  def posts
+    Post.all.select do |post|
+      post.author == self
     end
+  end
 
-end 
+  def add_post(post)
+    post.author = self
+  end
+
+  def add_post_by_title(title)
+    new_post = Post.new(title)
+    new_post.author = self
+  end
+
+  def self.post_count
+    Post.all.count
+  end
+end
